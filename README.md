@@ -2,48 +2,60 @@
 
 Repositório contendo projetos, atividades e práticas desenvolvidas durante a disciplina Programação Avançada para Web, do curso técnico em informática no Colégio Técnico Antônio Teixeira Fernandes (Univap).
 
+
 📄 Descrição
+
 Aqui estão reunidos os códigos, exercícios, projetos e testes práticos realizados ao longo das aulas, utilizando tecnologias modernas para desenvolvimento web, tanto no front-end quanto no back-end.
 
 Os projetos incluem desde APIs até sistemas web dinâmicos, seguindo os conteúdos propostos na disciplina.
 
+
 🧠 Tecnologias utilizadas
-⚙️ PHP 8 – Desenvolvimento back-end
 
-🖥️ HTML – Estrutura de páginas web
+    ⚙️ PHP 8 – Desenvolvimento back-end
 
-🎨 CSS – Estilização das interfaces (em alguns projetos)
+    🖥️ HTML – Estrutura de páginas web
 
-🔧 JavaScript – Scripts e interatividade no front-end
+    🎨 CSS – Estilização das interfaces (em alguns projetos)
 
-🔗 Insomnia – Testes de APIs REST
+    🔧 JavaScript – Scripts e interatividade no front-end
 
-🗄️ Banco de dados (MySQL/MariaDB) – (em projetos que utilizam)
+    🔗 Insomnia – Testes de APIs REST
+
+    🗄️ Banco de dados (MySQL/MariaDB) – (em projetos que utilizam)
+
 
 🗂️ Conteúdo da pasta
-🗒️ Atividades e exercícios propostos em aula
 
-🔧 Projetos de APIs e back-end com PHP
+    🗒️ Atividades e exercícios propostos em aula
 
-💻 Aplicações web com front-end e back-end integrados
+    🔧 Projetos de APIs e back-end com PHP
 
-🧪 Testes de API realizados com Insomnia
+    💻 Aplicações web com front-end e back-end integrados
 
-📁 Documentação simples e anotações sobre os projetos
+    🧪 Testes de API realizados com Insomnia
+
+    📁 Documentação simples e anotações sobre os projetos
+
 
 🚀 Objetivo da disciplina
-Aprimorar o desenvolvimento web com foco em aplicações dinâmicas;
 
-Criar, testar e consumir APIs REST;
+    1. Aprimorar o desenvolvimento web com foco em aplicações dinâmicas;
 
-Entender a comunicação entre front-end e back-end;
+    2. Criar, testar e consumir APIs REST;
 
-Aplicar conceitos avançados de programação web, manipulação de dados e integrações.
+    3. Entender a comunicação entre front-end e back-end;
+
+    4. Aplicar conceitos avançados de programação web, manipulação de dados e integrações.
+
 
 ⚠️ Aviso
+
 Este repositório tem finalidade educacional, servindo como registro de atividades e projetos desenvolvidos durante o curso. Alguns códigos são simplificados ou focados na prática de conceitos específicos, podendo não representar projetos prontos para produção.
 
+
 👥 Autores
+
 Amanda Leite de Souza Machado
 
 Turma: 2°ano 2025 – Univap
