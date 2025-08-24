@@ -1,0 +1,20 @@
+# Ignorar arquivos do sistema
+*.log
+*.bak
+*.swp
+
+# Ignorar pastas de cache
+/cache/
+/tmp/
+/logs/
+
+# Ignorar arquivos de configuração do servidor
+*.conf
+*.ini
+
+# Ignorar arquivos específicos do editor
+.vscode/
+.idea/
+
+# Ignorar arquivos temporários
+*.tmp
