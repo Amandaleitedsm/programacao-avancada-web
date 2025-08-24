@@ -22,6 +22,13 @@ export default class ApiService {
     async simpleGet(uri) {
         try {
             const response = await fetch(uri);            // Faz a requisição HTTP GET
+            if (!response.ok) {
+                // Lança um erro com status e texto da resposta
+                const text = await response.text(); // ou json se tiver
+                const error = new Error(text || `Erro HTTP ${response.status}`);
+                error.status = response.status;
+                throw error;
+            }
             const jsonObj = await response.json();        // Converte a resposta para JSON
             console.log("GET:", uri, jsonObj);             // Log para depuração
             return jsonObj;                                // Retorna o JSON obtido
@@ -56,6 +63,14 @@ export default class ApiService {
                 headers: headers
             });
 
+            if (!response.ok) {
+                // Lança um erro com status e texto da resposta
+                const text = await response.text(); // ou json se tiver
+                const error = new Error(text || `Erro HTTP ${response.status}`);
+                error.status = response.status;
+                throw error;
+            }
+            
             const jsonObj = await response.json();   // Converte resposta para JSON
             console.log("GET:", uri, jsonObj);       // Log para depuração
             return jsonObj;                           // Retorna JSON da resposta
@@ -93,7 +108,11 @@ export default class ApiService {
 
             // Verifica se a resposta HTTP foi bem sucedida (status 2xx)
             if (!response.ok) {
-                throw new Error(`Erro HTTP: ${response.status}`);
+                // Lança um erro com status e texto da resposta
+                const text = await response.text(); // ou json se tiver
+                const error = new Error(text || `Erro HTTP ${response.status}`);
+                error.status = response.status;
+                throw error;
             }
 
             const jsonObj = await response.json();
@@ -129,6 +148,14 @@ export default class ApiService {
                 headers: headers,
                 body: JSON.stringify(jsonObject)
             });
+
+            if (!response.ok) {
+                // Lança um erro com status e texto da resposta
+                const text = await response.text(); // ou json se tiver
+                const error = new Error(text || `Erro HTTP ${response.status}`);
+                error.status = response.status;
+                throw error;
+            }
 
             const jsonObj = await response.json();
             console.log("POST:", uri, jsonObj);
@@ -167,6 +194,13 @@ export default class ApiService {
                 body: JSON.stringify(jsonObject)
             });
 
+            if (!response.ok) {
+                // Lança um erro com status e texto da resposta
+                const text = await response.text(); // ou json se tiver
+                const error = new Error(text || `Erro HTTP ${response.status}`);
+                error.status = response.status;
+                throw error;
+            }
             const jsonObj = await response.json();
             console.log("PUT:", fullUri, jsonObj);
             return jsonObj;

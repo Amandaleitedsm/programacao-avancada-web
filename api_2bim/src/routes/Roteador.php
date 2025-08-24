@@ -76,19 +76,6 @@ class Roteador {
             }
             exit();
         });
-        /*$this->router->post('/auth/logout', function() {
-            try{
-                (new JWTMiddleware())->isValidToken(); 
-                $authorization = getallheaders()['Authorization'] ?? null;
-                $jwt = trim(str_replace('Bearer ', '', $authorization));
-                (new TokenDAO())->invalidarToken($jwt);
-                (new Response(true, "Logout realizado com sucesso."))->send();
-            }
-            catch (Throwable $exception) {
-                $this->handleError($exception, "Error during logout");
-            }
-            exit();
-        });*/
 
 
 
@@ -128,22 +115,30 @@ class Roteador {
             try{
                 $jwtMiddleware = new JWTMiddleware();
                 $claims = $jwtMiddleware->isValidToken();
+                $requestBody = file_get_contents('php://input');
+                $cadastroMiddleware = new CadastroMiddleware();
+                $stdCadastro = $cadastroMiddleware->stringJsonToStdClass($requestBody);
+                
                     if ($claims->public->Role === "admin") {
                         $requestBody = file_get_contents('php://input');
                         $cadastroMiddleware = new CadastroMiddleware();
                         $stdCadastro = $cadastroMiddleware->stringJsonToStdClass($requestBody);
                         $cadastroMiddleware->isValidID((int)$id);
 
-                        if (isset($stdCadastro->controle->Nome)) {
+                        if (!empty($stdCadastro->controle->Nome)) {
                             $cadastroMiddleware->isValidNome($stdCadastro->controle->Nome);
                         }
-                        if (isset($stdCadastro->controle->Cargo)) {
+                        if (!empty($stdCadastro->controle->Cargo)) {
                             $cadastroMiddleware->isValidCargo($stdCadastro->controle->Cargo);
                         }
-                        if (isset($stdCadastro->controle->Senha)) {
+                        if (!empty($stdCadastro->controle->Senha)) {
                             $cadastroMiddleware->isValidSenha($stdCadastro->controle->Senha);
-                        }
+                        } 
                         $stdCadastro->controle->Matricula = (int)$id;
+                        (new CadastroControl())->edit($stdCadastro);
+                    } else if ($claims->public->Role === "aluno" && $claims->private->matricula === (int)$id
+                                && !empty($stdCadastro->controle->Senha)) {
+                        $cadastroMiddleware->isValidSenha($stdCadastro->controle->Senha);
                         (new CadastroControl())->edit($stdCadastro);
                     } else {
                         $this->unauthorizedResponse();
@@ -375,12 +370,8 @@ class Roteador {
     private function setUpTurmas(): void {
         $this->router->get(pattern: '/turmas', fn: function(): never {
             try{
-                $claims = (new JWTMiddleware())->isValidToken();
-                if ($claims->public->Role === "admin") {
-                    (new turmasControl())->index();
-                } else {
-                    $this->unauthorizedResponse();
-                }
+                
+                (new turmasControl())->index();
             }catch (Throwable $exception) {
                 $this->handleError(exception: $exception, message: "Erro na seleção de turmas.");
             }
@@ -388,16 +379,6 @@ class Roteador {
         });
         $this->router->get(pattern: '/turmas/(\d+)', fn: function($idTurma): never {
             try {
-                    $claims = (new JWTMiddleware())->isValidToken();
-                    if ($claims->public->Role === "admin") {
-                    (new TurmasMiddleware())
-                        ->IsValidID(idTurma: (int)$idTurma);
-
-                    (new turmasControl())
-                        ->show(idTurma: (int)$idTurma);
-                } else {
-                    $this->unauthorizedResponse();
-                }
                 (new TurmasMiddleware())
                     ->IsValidID(idTurma: (int)$idTurma);
 
@@ -480,12 +461,13 @@ class Roteador {
 
 
     public function unauthorizedResponse(){
-        (new Response(
+        $response = new Response(
             success: false,
             message: 'Você não possui autorização para executar a operação',
             error: ['codigoError' => 'validation_error', 'message' => 'Credencial de acesso inválida', ],
             httpCode: 401
-        ))->send();
+        );
+        $response->send();
     }
 
     private function handleError(Throwable $exception, $message): void {

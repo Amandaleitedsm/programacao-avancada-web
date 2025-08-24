@@ -25,7 +25,15 @@
   <div class="mb-3">
     <input type="number" id="txtId" class="form-control mb-2" placeholder="Matrícula" />
     <input type="text" id="txtNome" class="form-control mb-2" placeholder="Nome" />
+<<<<<<< HEAD
     <input type="text" id="txtCargo" class="form-control mb-2" placeholder="Cargo" />
+=======
+    <select id="txtCargo" class="form-control mb-2">
+      <option value="">Selecione o cargo</option>
+      <option value="admin">Admin</option>
+      <option value="aluno">Aluno</option>
+    </select>
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
     <input type="date" id="txtData" class="form-control mb-2" placeholder="Data de nascimento" />
     <input type="text" id="txtSenha" class="form-control mb-2" placeholder="Senha" />
   </div>
@@ -47,6 +55,20 @@
     const token = userData?.data?.token;
 
     console.log("Token recuperado:", token);
+<<<<<<< HEAD
+=======
+    let role = null;
+    let payload = null;
+
+    if (token) {
+      payload = JSON.parse(atob(token.split(".")[1])); // decodifica o meio do JWT
+      console.log("Payload do token:", payload);
+
+      role = payload.public?.Role;
+
+      console.log("Role do usuário:", role);
+    }
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
 
     const api = new ApiService(token);
 
@@ -121,6 +143,7 @@
     btnAtualizar.onclick = async function btnAtualizar_click() {
       const id = txtId.value.trim();
       if (!id) return alert("Informe o ID."); // ID obrigatório para atualizar
+<<<<<<< HEAD
       const obj = {
         controle: {
           Matricula: id,
@@ -134,6 +157,27 @@
       await api.put("http://localhost:8080/usuarios", id, obj);
       // Atualiza a lista após alteração
       listAll();
+=======
+      if (id != payload.private?.matricula && txtSenha.value.trim() !== ""){
+        alert("Somente é possível alterar a senha do próprio usuário.");
+      } else {
+        const obj = { controle: {} };
+        if (txtNome.value.trim()) obj.controle.Nome = txtNome.value.trim();
+        if (txtCargo.value.trim()) obj.controle.Cargo = txtCargo.value.trim();
+        if (txtData.value.trim()) obj.controle.dataNascimento = txtData.value.trim();
+        if (txtSenha.value.trim()) obj.controle.Senha = txtSenha.value.trim();
+        obj.controle.Matricula = id; 
+        // Chama API para atualizar usuário pelo ID
+        await api.put("http://localhost:8080/usuarios", id, obj);
+      }
+      
+      
+      if (role === "aluno"){
+        listOne(payload.private?.matricula);
+      } else {
+        listAll();
+      }
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
     };
     divBotoes.appendChild(btnAtualizar);
 
@@ -158,6 +202,10 @@
       renderTable(API_DATA); // Renderiza tabela com os dados retornados
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
     function renderTable(dados) {
       const divTabela = document.getElementById("divTabela");
       divTabela.innerHTML = "";
@@ -168,15 +216,35 @@
       const thead = document.createElement("thead");
       thead.className = "table-light";
       const trHead = document.createElement("tr");
+<<<<<<< HEAD
       ["Matrícula", "Nome", "Cargo", "Data de Nascimento", "Senha", "Ações"].forEach(text => {
+=======
+
+      // Cabeçalhos básicos
+      ["Matrícula", "Nome", "Cargo", "Data de Nascimento", "Senha"].forEach(text => {
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
         const th = document.createElement("th");
         th.textContent = text;
         trHead.appendChild(th);
       });
+<<<<<<< HEAD
       thead.appendChild(trHead);
       table.appendChild(thead);
 
       // Cria corpo da tabela (tbody)
+=======
+
+      // Adiciona "Ações" somente se for admin
+      if (role === "admin") {
+        const thAcoes = document.createElement("th");
+        thAcoes.textContent = "Ações";
+        trHead.appendChild(thAcoes);
+      }
+
+      thead.appendChild(trHead);
+      table.appendChild(thead);
+
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
       const tbody = document.createElement("tbody");
       //alert(dados.success);
       // Para cada usuário, cria uma linha na tabela
@@ -212,6 +280,7 @@
         tdSenha.textContent = item.senha;
         tr.appendChild(tdSenha);
 
+<<<<<<< HEAD
         // Coluna Ações: botões Selecionar e Excluir
         const tdAcoes = document.createElement("td");
 
@@ -249,12 +318,72 @@
       });
 
       // Anexa o corpo à tabela e insere na div da tabela
+=======
+        // Coluna Ações só para admin
+        if (role === "admin") {
+          // Coluna Ações: botões Selecionar e Excluir
+          const tdAcoes = document.createElement("td");
+
+          // Botão Selecionar: preenche o formulário com os dados do usuário clicado
+          const btnSel = createButton("Selecionar", "btn-sm btn-info me-1");
+          const itemSelecionado = item;
+          btnSel.onclick = function () {
+            // Busca o item na lista global pelo ID
+
+            if (itemSelecionado) {
+              txtId.value = itemSelecionado.matricula;    
+              txtNome.value = itemSelecionado.nome;   
+              txtCargo.value = itemSelecionado.cargo;
+              txtData.value = itemSelecionado.dataNascimento; 
+              divResposta.textContent = "";            // Limpa mensagens anteriores
+              divResposta.className = "";
+            }
+          };
+          tdAcoes.appendChild(btnSel);
+
+          // Botão Excluir: pergunta confirmação e exclui o usuário da API
+          const btnExc = createButton("Excluir", "btn-sm btn-danger");
+          btnExc.onclick = async function () {
+            if (confirm(`Confirma excluir o usuário com matricula ${item.matricula}?`)) {
+              await api.delete("http://localhost:8080/usuarios", item.matricula); // Exclui pela API
+              listAll();                          // Atualiza lista após exclusão
+              divResposta.textContent = `Usuário com matricula ${item.matricula} excluído com sucesso.`;
+              divResposta.className = "alert alert-success";
+            }
+          };
+          tdAcoes.appendChild(btnExc);
+
+          tr.appendChild(tdAcoes);
+        }
+
+        tbody.appendChild(tr);
+      });
+
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
       table.appendChild(tbody);
       divTabela.appendChild(table);
     }
 
+<<<<<<< HEAD
     // Inicializa a listagem ao carregar a página
     listAll();
+=======
+    if (role === "aluno"){
+      txtData.style.display = "none";
+      txtNome.style.display = "none";
+      txtCargo.style.display = "none";
+      btnCriar.style.display = "none";
+      btnExcluir.style.display = "none";
+      btnListar.style.display = "none";
+      btnProcurar.style.display = "none";
+      listOne(payload.private?.matricula);
+    }
+
+    if (role == "admin"){
+      // Inicializa a listagem ao carregar a página
+      listAll();
+    }
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
 
   </script>
 

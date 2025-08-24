@@ -45,6 +45,20 @@
     const token = userData?.data?.token;
 
     console.log("Token recuperado:", token);
+<<<<<<< HEAD
+=======
+    let role = null;
+    let payload = null;
+
+    if (token) {
+      payload = JSON.parse(atob(token.split(".")[1])); // decodifica o meio do JWT
+      console.log("Payload do token:", payload);
+
+      role = payload.public?.Role;
+
+      console.log("Role do usuário:", role);
+    }   
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
 
     const api = new ApiService(token);
 
@@ -59,6 +73,10 @@
     const divBotoes = document.getElementById("divBotoes");
     const divResposta = document.getElementById("divResposta");
 
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
 
     function createButton(text, className) {
       const btn = document.createElement("button");
@@ -135,6 +153,10 @@
       listAll();
     };
     divBotoes.appendChild(btnExcluir);
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
 
     async function listAll() {
       API_DATA = await api.get("http://localhost:8080/alunos"); // Busca todos os usuários via GET
@@ -142,8 +164,13 @@
     }
 
     async function listOne(id){
+<<<<<<< HEAD
       API_DATA = await api.getById(`http://localhost:8080/alunos`, id);
       renderTable(API_DATA); // Renderiza tabela com os dados retornados
+=======
+      API_DATA = await api.getById("http://localhost:8080/alunos", id);
+      renderTable(API_DATA);
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
     }
 
     function renderTable(dados) {
@@ -156,11 +183,18 @@
       const thead = document.createElement("thead");
       thead.className = "table-light";
       const trHead = document.createElement("tr");
+<<<<<<< HEAD
       ["Matrícula", "Nome", "Turma", "Ações"].forEach(text => {
+=======
+
+      // Cabeçalhos básicos
+      ["Matrícula", "Nome", "Turma"].forEach(text => {
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
         const th = document.createElement("th");
         th.textContent = text;
         trHead.appendChild(th);
       });
+<<<<<<< HEAD
       thead.appendChild(trHead);
       table.appendChild(thead);
 
@@ -172,20 +206,46 @@
         const tr = document.createElement("tr");
 
         // Coluna ID
+=======
+
+      // Adiciona "Ações" somente se for admin
+      if (role === "admin") {
+        const thAcoes = document.createElement("th");
+        thAcoes.textContent = "Ações";
+        trHead.appendChild(thAcoes);
+      }
+
+      thead.appendChild(trHead);
+      table.appendChild(thead);
+
+      // Cria corpo da tabela
+      const tbody = document.createElement("tbody");
+
+      dados.data.alunos.forEach(item => {
+        const tr = document.createElement("tr");
+
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
         const tdId = document.createElement("td");
         tdId.textContent = item.matricula;
         tr.appendChild(tdId);
 
+<<<<<<< HEAD
         // Coluna nome aluno
+=======
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
         const tdNome = document.createElement("td");
         tdNome.textContent = item.nome;
         tr.appendChild(tdNome);
 
+<<<<<<< HEAD
         // Coluna turma
+=======
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
         const tdTurma = document.createElement("td");
         tdTurma.textContent = item.id_turma;
         tr.appendChild(tdTurma);
 
+<<<<<<< HEAD
         // Coluna Ações: botões Selecionar e Excluir
         const tdAcoes = document.createElement("td");
 
@@ -222,13 +282,67 @@
       });
 
       // Anexa o corpo à tabela e insere na div da tabela
+=======
+        // Coluna Ações só para admin
+        if (role === "admin") {
+          const tdAcoes = document.createElement("td");
+
+          const btnSel = createButton("Selecionar", "btn-sm btn-info me-1");
+          btnSel.onclick = function () {
+            txtId.value = item.matricula;
+            txtNome.value = item.nome;
+            txtTurma.value = item.id_turma;
+            divResposta.textContent = "";
+            divResposta.className = "";
+          };
+          tdAcoes.appendChild(btnSel);
+
+          const btnExc = createButton("Excluir", "btn-sm btn-danger");
+          btnExc.onclick = async function () {
+            if (confirm(`Confirma excluir o aluno matricula ${item.matricula}?`)) {
+              await api.delete("http://localhost:8080/alunos", item.matricula);
+              listAll();
+              divResposta.textContent = `Aluno matrícula ${item.matricula} excluído com sucesso.`;
+              divResposta.className = "alert alert-success";
+            }
+          };
+          tdAcoes.appendChild(btnExc);
+
+          tr.appendChild(tdAcoes);
+        }
+
+        tbody.appendChild(tr);
+      });
+
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
       table.appendChild(tbody);
       divTabela.appendChild(table);
     }
 
+<<<<<<< HEAD
     // Inicializa a listagem ao carregar a página
     listAll();
 
+=======
+
+    if (role === "aluno"){
+      txtId.style.display = "none";
+      txtNome.style.display = "none";
+      txtTurma.style.display = "none";
+      btnCriar.style.display = "none";
+      btnExcluir.style.display = "none";
+      btnAtualizar.style.display = "none";
+      btnListar.style.display = "none";
+      btnProcurar.style.display = "none";
+      listOne(payload.private?.matricula);
+    }
+
+    if (role == "admin"){
+      // Inicializa a listagem ao carregar a página
+      listAll();
+    }
+    
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
   </script>
 
   

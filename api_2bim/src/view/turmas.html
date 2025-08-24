@@ -23,7 +23,11 @@
 
   <h1 class="mb-4">Gerenciamento de turmas</h1>
   <div class="mb-3">
+<<<<<<< HEAD
     <input type="number" id="txtId" class="form-control mb-2" disabled placeholder="ID (para update ou delete)" />
+=======
+    <input type="number" id="txtId" class="form-control mb-2" placeholder="ID" />
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
     <input type="number" id="txtSerie" class="form-control mb-2" placeholder="Série" />
     <input type="text" id="txtLetra" class="form-control mb-2" placeholder="Letra da Turma" />
     <input type="number" id="txtCurso" class="form-control mb-2" placeholder="ID do Curso" />
@@ -49,6 +53,21 @@
 
     console.log("Token recuperado:", token);
 
+<<<<<<< HEAD
+=======
+    let role = null;
+    let payload = null;
+
+    if (token) {
+      payload = JSON.parse(atob(token.split(".")[1])); // decodifica o meio do JWT
+      console.log("Payload do token:", payload);
+
+      role = payload.public?.Role;
+
+      console.log("Role do usuário:", role);
+    }
+
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
     const api = new ApiService(token);
 
 
@@ -85,8 +104,14 @@
       
       listOne(id);
     };
+<<<<<<< HEAD
 
     divBotoes.appendChild(btnProcurar);
+=======
+    divBotoes.appendChild(btnProcurar);
+
+
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
     const btnCriar = createButton("Criar", "btn-success");
     btnCriar.onclick = async function btnCriar_click() {
       if (txtSerie.value.trim() == "") {
@@ -216,6 +241,7 @@
         };
         tdAcoes.appendChild(btnSel);
 
+<<<<<<< HEAD
         // Botão Excluir: pergunta confirmação e exclui o usuário da API
         const btnExc = createButton("Excluir", "btn-sm btn-danger");
         btnExc.onclick = async function () {
@@ -227,6 +253,22 @@
           }
         };
         tdAcoes.appendChild(btnExc);
+=======
+        if (role === "admin"){
+          // Botão Excluir: pergunta confirmação e exclui o usuário da API
+          const btnExc = createButton("Excluir", "btn-sm btn-danger");
+          btnExc.onclick = async function () {
+            if (confirm(`Confirma excluir a turma id ${item.id_turma}?`)) {
+              await api.delete("http://localhost:8080/turmas", item.id_turma); // Exclui pela API
+              listAll();                          // Atualiza lista após exclusão
+              divResposta.textContent = `turma id ${item.id_turma} excluído com sucesso.`;
+              divResposta.className = "alert alert-success";
+            }
+          };
+          tdAcoes.appendChild(btnExc);
+        }
+        
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
 
         tr.appendChild(tdAcoes);
         tbody.appendChild(tr);
@@ -237,7 +279,22 @@
       divTabela.appendChild(table);
     }
 
+<<<<<<< HEAD
     // Inicializa a listagem ao carregar a página
+=======
+    if (role === "aluno"){
+      txtCurso.style.display = "none";
+      txtLetra.style.display = "none";
+      txtSerie.style.display = "none";
+      btnCriar.style.display = "none";
+      btnExcluir.style.display = "none";
+      btnAtualizar.style.display = "none";
+    } else {
+      txtId.disabled = true;
+      txtId.placeholder = "ID (para update e delete)";
+    }
+
+>>>>>>> 966f8f2 (Modificações de HTML, CSS e lógicas de programação em todos os html + controle de cadastro para pegar dados de array)
     listAll();
 
   </script>

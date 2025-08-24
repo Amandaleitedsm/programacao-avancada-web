@@ -9,7 +9,7 @@ require_once 'api_2bim/src/models/CadastroUsuario.php';
             $cadastroDAO = new CadastroDAO();
             $resposta = $cadastroDAO->readAll();
             foreach ($resposta as &$item){
-                if (password_verify($item["dataNascimento"], $item["senha"])) {
+                if (password_verify(str_replace("-", "", $item["dataNascimento"]), $item["senha"])) {
                     $item["senha"] = "default_password";
                 } else {
                     $item["senha"] = "senha_atualizada"; 
@@ -28,7 +28,7 @@ require_once 'api_2bim/src/models/CadastroUsuario.php';
         {
             $cadastroDAO = new CadastroDAO();
             $resposta = $cadastroDAO->readById($matricula);
-            if (password_verify($resposta["dataNascimento"], $resposta["senha"])) {
+            if (password_verify(str_replace("-", "", $resposta["dataNascimento"]), $resposta["senha"])) {
                 $resposta["senha"] = "default_password";
             } else {
                 $resposta["senha"] = "senha_atualizada";
@@ -60,12 +60,11 @@ require_once 'api_2bim/src/models/CadastroUsuario.php';
             $cadastro = new CadastroUsuario();
             $cadastro
                 ->setMatricula($stdCadastro->controle->Matricula)
-                ->setNome(isset($stdCadastro->controle->Nome) ? $stdCadastro->controle->Nome : $atual->getNome())
-                ->setSenha(isset($stdCadastro->controle->Senha) ? $stdCadastro->controle->Senha : $atual->getSenha())
-                ->setSenhaHash(isset($stdCadastro->controle->Senha) ? password_hash($stdCadastro->controle->Senha, PASSWORD_DEFAULT) : $atual->getSenhaHash())
-                ->setCargo(isset($stdCadastro->controle->Cargo) ? $stdCadastro->controle->Cargo : $atual->getCargo())
-                ->setDataNascimento(dataNascimento: $data);
-    
+                ->setNome(isset($stdCadastro->controle->Nome) ? $stdCadastro->controle->Nome : $atual['nome'])
+                ->setSenha(isset($stdCadastro->controle->Senha) ? $stdCadastro->controle->Senha : $atual['senha'])
+                ->setSenhaHash(isset($stdCadastro->controle->Senha) ? password_hash($stdCadastro->controle->Senha, PASSWORD_DEFAULT) : $atual['senha'])
+                ->setCargo(isset($stdCadastro->controle->Cargo) ? $stdCadastro->controle->Cargo : $atual['cargo'])
+                ->setDataNascimento(!empty($data) ? $data : $atual['dataNascimento']);
 
             $atualizado = $cadastroDAO->update($cadastro);
             if ($atualizado !== false) {
@@ -104,16 +103,7 @@ require_once 'api_2bim/src/models/CadastroUsuario.php';
                 ->setSenha($senha)
                 ->setSenhaHash(senhaHash: password_hash($senha, PASSWORD_DEFAULT)); // Armazena a senha como hash
             
-            if ($stdCadastro->controle->Cargo == "aluno") {
-                if (empty($alunosDAO->readById((int)$stdCadastro->controle->Matricula))) {
-                    (new Response(
-                        success: false,
-                        message: 'Aluno não encontrado. Não é possível criar controle.',
-                        httpCode: 404
-                    ))->send();
-                    exit();
-                }
-            }
+            
             $cadastroDAO = new CadastroDAO();
             $nomeCadastro = $cadastroDAO->create($cadastro);
             
