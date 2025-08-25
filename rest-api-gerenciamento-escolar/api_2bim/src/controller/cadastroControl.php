@@ -54,7 +54,6 @@ require_once 'api_2bim/src/models/CadastroUsuario.php';
         public function edit(stdClass $stdCadastro): never
         {
             $cadastroDAO = new CadastroDAO();
-            $data = new DateTime($stdCadastro->controle->dataNascimento);
             $atual = $cadastroDAO->readById($stdCadastro->controle->Matricula);
 
             $cadastro = new CadastroUsuario();
@@ -63,8 +62,15 @@ require_once 'api_2bim/src/models/CadastroUsuario.php';
                 ->setNome(isset($stdCadastro->controle->Nome) ? $stdCadastro->controle->Nome : $atual['nome'])
                 ->setSenha(isset($stdCadastro->controle->Senha) ? $stdCadastro->controle->Senha : $atual['senha'])
                 ->setSenhaHash(isset($stdCadastro->controle->Senha) ? password_hash($stdCadastro->controle->Senha, PASSWORD_DEFAULT) : $atual['senha'])
-                ->setCargo(isset($stdCadastro->controle->Cargo) ? $stdCadastro->controle->Cargo : $atual['cargo'])
-                ->setDataNascimento(!empty($data) ? $data : $atual['dataNascimento']);
+                ->setCargo(isset($stdCadastro->controle->Cargo) ? $stdCadastro->controle->Cargo : $atual['cargo']);
+                
+            if (!empty($stdCadastro->controle->dataNascimento)) {
+                $data = new DateTime($stdCadastro->controle->dataNascimento);
+                $cadastro->setDataNascimento($data);
+            } else {
+                $data = new DateTime($atual['dataNascimento']);
+                $cadastro->setDataNascimento($data);
+            }
 
             $atualizado = $cadastroDAO->update($cadastro);
             if ($atualizado !== false) {
